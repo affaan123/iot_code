@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-rolebinding
+  namespace: default  # Adjust if using a different namespace
+subjects:
+  - kind: ServiceAccount
+    name: prometheus
+    namespace: default  # Adjust if using a different namespace
+roleRef:
+  kind: Role
+  name: prometheus-role
+  apiGroup: rbac.authorization.k8s.io

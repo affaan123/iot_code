@@ -1,0 +1,53 @@
+version: '3'
+services:
+  mqtt-broker:
+    image: eclipse-mosquitto:2.0
+    container_name: mqtt-broker
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - mosquitto-data:/mosquitto/data
+      - mosquitto-log:/mosquitto/log
+      - ~/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    command: mosquitto -c /mosquitto/config/mosquitto.conf
+    networks:
+      - iot-network
+
+  publisher:
+    build:
+      context: .
+      dockerfile: Dockerfile.publish
+    container_name: weather-publisher
+    depends_on:
+      - mqtt-broker
+    networks:
+      - iot-network
+
+  coap-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.coap-server
+    container_name: coap-server
+    ports:
+      - "5683:5683/udp"
+    networks:
+      - iot-network
+
+  coap-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.coap-client
+    container_name: coap-client
+    depends_on:
+      - coap-server
+    networks:
+      - iot-network
+
+volumes:
+  mosquitto-data:
+  mosquitto-log:
+
+networks:
+  iot-network:
+    driver: bridge

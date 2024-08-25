@@ -1,0 +1,14 @@
+# Use a lightweight base image
+FROM python:3.9-alpine
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy only the necessary file
+COPY coap_server.py ./
+
+# Install the required Python packages
+RUN pip install --no-cache-dir aiocoap prometheus_client
+
+# Run coap_server.py when the container launches
+CMD ["python", "coap_server.py"]

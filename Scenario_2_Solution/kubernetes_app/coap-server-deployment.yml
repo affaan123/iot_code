@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coap-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coap-server
+  template:
+    metadata:
+      labels:
+        app: coap-server
+    spec:
+      containers:
+      - name: coap-server
+        image: affaan038/local-coap-server:latest
+        ports:
+        - containerPort: 5683
+        - containerPort: 8000  # Metrics port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coap-server
+spec:
+  type: NodePort
+  selector:
+    app: coap-server
+  ports:
+  - protocol: UDP
+    port: 5683
+    targetPort: 5683
+    name: coap
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+    name: metrics

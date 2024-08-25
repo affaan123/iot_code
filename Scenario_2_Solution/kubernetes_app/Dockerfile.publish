@@ -1,0 +1,14 @@
+# Use a lightweight base image
+FROM python:3.9-alpine
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy only the necessary file
+COPY publish_weather.py ./
+
+# Install the required Python packages
+RUN pip install --no-cache-dir paho-mqtt
+
+# Run publish_weather.py when the container launches
+CMD ["python", "publish_weather.py"]

@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coap-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coap-client
+  template:
+    metadata:
+      labels:
+        app: coap-client
+    spec:
+      containers:
+      - name: coap-client
+        image: affaan038/local-coap-client:latest
